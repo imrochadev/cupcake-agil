@@ -1,0 +1,38 @@
+# Loja rodando local: MongoDB e o app (build de produção).
+#
+#   docker compose up --build        # tudo: http://localhost:3000
+#   docker compose up -d mongo       # só o banco, para o `pnpm dev` (DATABASE_URL do .env.example)
+#
+# Portas só em 127.0.0.1; a do Mongo (27031) é própria para não brigar com outro MongoDB da máquina.
+
+name: cupcake-agil
+
+services:
+  mongo:
+    image: mongo:8
+    ports:
+      - 127.0.0.1:${MONGO_PORT:-27031}:27017
+    volumes:
+      - mongo:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: mongodb://mongo:27017/cupcake_agil
+      BETTER_AUTH_URL: http://localhost:${APP_PORT:-3000}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-troque-este-segredo-local-com-mais-de-32-caracteres}
+    ports:
+      - 127.0.0.1:${APP_PORT:-3000}:3000
+
+volumes:
+  mongo:

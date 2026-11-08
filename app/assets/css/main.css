@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #fff7f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #fdeee6;
+  --color-line: #f0dcd2;
+  --color-muted: #85655c;
+  --color-text: #3b2420;
+  --color-brand: #b8245a;
+  --color-brand-strong: #961a48;
+  --color-brand-soft: #ffe3ec;
+  --color-accent: #f4a261;
+  --color-ok: #1b6e4c;
+  --color-ok-soft: #e1f5ec;
+  --color-danger: #c81e3a;
+  --color-danger-soft: #fde7ea;
+  --color-warn: #8f5000;
+  --color-warn-soft: #fff1d6;
+
+  --font-sans: "Nunito", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Fredoka", "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+  --animate-pop: pop .35s cubic-bezier(.2, 1.4, .4, 1) both;
+  --animate-fade-up: fade-up .3s ease-out both;
+}
+
+@keyframes pop {
+  0% { transform: scale(.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fade-up {
+  0% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@layer base {
+  html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); -webkit-tap-highlight-color: transparent; }
+  h1, h2, h3 { font-family: var(--font-display); }
+  :focus-visible { outline: 3px solid color-mix(in oklab, var(--color-brand) 55%, transparent); outline-offset: 2px; }
+  dialog::backdrop { background: rgb(59 36 32 / .45); backdrop-filter: blur(3px); }
+}
+
+/* Componentes como utilitários do Tailwind 4 (dá para usar `@apply btn` dentro de outro). */
+@utility card { @apply rounded-2xl border border-line bg-surface shadow-[0_1px_0_rgb(0_0_0/.03),0_8px_24px_-12px_rgb(120_60_40/.18)]; }
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition select-none disabled:cursor-not-allowed disabled:opacity-55; }
+@utility btn-primary { @apply btn bg-brand text-white hover:bg-brand-strong active:scale-[.98]; }
+@utility btn-outline { @apply btn border border-line bg-surface text-text hover:border-brand hover:text-brand; }
+@utility btn-ghost { @apply btn text-muted hover:bg-surface-2 hover:text-text; }
+@utility btn-danger { @apply btn border border-danger/30 bg-surface text-danger hover:bg-danger-soft; }
+@utility label { @apply mb-1 block text-sm font-semibold; }
+@utility input { @apply w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-text placeholder:text-muted/70 focus:border-brand focus:outline-none focus:ring-3 focus:ring-brand/15 aria-[invalid=true]:border-danger; }
+@utility hint { @apply mt-1 text-xs text-muted; }
+@utility erro { @apply mt-1 text-sm font-medium text-danger; }
+@utility chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold; }
+@utility alerta { @apply flex items-start gap-2 rounded-xl px-3 py-2.5 text-sm; }
+
+@media print {
+  .no-print { display: none !important; }
+  html { background: #fff; }
+  .card { box-shadow: none; break-inside: avoid; }
+}
